@@ -7,7 +7,7 @@ use Illuminate\View\View;
 
 class BlogController extends Controller
 {
-    function index() : View {
+    function blogs() : View {
         // index functie verwacht een view en als die is gevonden dan stuurt het door
         // naar de view 'blogs' met een object en de waarde ervan
 
