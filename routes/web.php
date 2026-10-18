@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
+use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -16,25 +15,23 @@ use App\Http\Controllers\TaskController;
 //     return view('contact');
 // });
 
-Route::get('blogs', [\App\Http\Controllers\BlogController::class, 'index']);
-
 Route::get('/test', function () {
     return view('test');
 });
 
+Route::get('/tasks', [TaskController::class, 'index'])->name(name: 'tasks.index');
 
+Route::get('/tasks/create', [TaskController::class, 'create'])
+    ->middleware('auth')
+    ->name(name: 'tasks.create');
 
-Route::get('/test', function () {
-    return view('test');
-});
+Route::post('/tasks', [TaskController::class, 'store'])
+    ->middleware('auth')
+    ->name(name: 'tasks.store');
 
-Route::get('/tasks', [TaskController::class, 'index']);
-
-Route::view('/', 'welcome');
+Route::view('/', 'welcome')->name('home');
 Route::view('/about-us', 'about-us');
 Route::view('/contact', 'contact');
-
-
 
 Route::get('/app', function () {
     return view('app');
@@ -44,10 +41,4 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';
+require __DIR__.'/settings.php';

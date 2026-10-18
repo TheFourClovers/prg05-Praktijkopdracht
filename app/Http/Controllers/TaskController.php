@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
-
 class TaskController extends Controller
 {
     /**
@@ -13,14 +12,11 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $task = new Task();
-            $task->title = 'Sawing job';
-            $task->description = 'I need this boat sawed in half by the end of the week';
-        return view( 'tasks', [
-            'task' => $task,
-        ]
-            
-        );
+        $tasks = Task::query()->latest()->get();
+
+        return view('tasks', [
+            'tasks' => $tasks,
+        ]);
     }
 
     /**
@@ -28,7 +24,8 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        // een leeg form laten zien.
+        return view(view: 'tasks.create');
     }
 
     /**
@@ -36,7 +33,28 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // info uit form halen V
+        // check voor sql-injections V
+        // validatie V
+        $request->validate([
+            'title' => 'required|min:3|max:100',
+            'description' => 'required',
+            'category_id' => 'required|integer|exists:categories,id',
+        ]);
+        // error handling V
+        // info de database in
+        $task = new Task;
+        $task->title = $request->input(key: 'title');
+        $task->user_id = auth()->id();
+        $task->category_id = $request->input(key: 'category_id');
+        $task->status = false;
+        $task->description = $request->input(key: 'description');
+        $task->is_urgent = false;
+
+        $task->save();
+        // redirect naar tasks.index
+
+        return redirect()->route(route: 'tasks.index');
     }
 
     /**

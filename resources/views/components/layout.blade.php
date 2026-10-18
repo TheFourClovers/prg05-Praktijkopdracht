@@ -13,6 +13,7 @@
         <meta name="viewport" content="width=device-width", initial-scale="1">
         <title>{{ $title }}</title>
 
+        @vite(['resources/css/app.css', 'resources/js/app.tsx'])
 
         <style>
             nav > a {
@@ -42,7 +43,7 @@
         <a href="/">home</a>
         <a href="/about-us">about us</a>
         <a href="/contact">Contact</a>
-        <a href="auth/login">Login</a>
+        <a href="{{ route('login') }}">Login</a>
     </nav>
 
     <main>
