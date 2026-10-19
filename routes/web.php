@@ -25,9 +25,24 @@ Route::get('/tasks/create', [TaskController::class, 'create'])
     ->middleware('auth')
     ->name(name: 'tasks.create');
 
+Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])
+    ->middleware('auth')
+    ->name(name: 'tasks.edit');
+
+Route::get('/tasks/{task}', [TaskController::class, 'show'])
+    ->name(name: 'tasks.show');
+
 Route::post('/tasks', [TaskController::class, 'store'])
     ->middleware('auth')
     ->name(name: 'tasks.store');
+
+Route::put('/tasks/{task}', [TaskController::class, 'update'])
+    ->middleware('auth')
+    ->name(name: 'tasks.update');
+
+Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])
+    ->middleware('auth')
+    ->name(name: 'tasks.destroy');
 
 Route::view('/', 'welcome')->name('home');
 Route::view('/about-us', 'about-us');
@@ -39,6 +54,6 @@ Route::get('/app', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware('auth')->name('dashboard');
 
 require __DIR__.'/settings.php';
