@@ -17,7 +17,7 @@
                         </h1>
                     </div>
 
-                    <span class="{{ $task->status ? 'text-emerald-400' : 'text-slate-400' }} rounded-full bg-slate-800 px-3 py-1 text-sm">
+                    <span class="{{ $task->status ? 'text-yellow-400' : 'text-slate-400' }} rounded-full bg-slate-800 px-3 py-1 text-sm">
                         {{ $task->status ? 'Closed' : 'Open' }}
                     </span>
                 </div>
@@ -46,6 +46,16 @@
                 @auth
                     @if (auth()->id() === $task->user_id)
                         <div class="mt-6 flex gap-3 border-t border-slate-800 pt-6">
+                            @if (! $task->status)
+                                <form action="{{ route('tasks.close', $task) }}" method="post">
+                                    @csrf
+                                    <button type="submit"
+                                            class="rounded-lg bg-yellow-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-yellow-500">
+                                        Mark as closed
+                                    </button>
+                                </form>
+                            @endif
+
                             <a href="{{ route('tasks.edit', $task) }}"
                                class="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500">
                                 Edit task

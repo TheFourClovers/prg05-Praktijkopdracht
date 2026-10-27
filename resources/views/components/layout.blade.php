@@ -20,7 +20,7 @@
                 </a>
 
                 <div class="flex items-center gap-1 text-sm font-medium text-slate-100">
-                    <a href="{{ route('home') }}"
+                    <a href="{{ route('tasks.index') }}"
                        class="rounded-md px-3 py-2 transition hover:bg-slate-600 hover:text-white">
                         Home
                     </a>
@@ -37,10 +37,14 @@
                            class="rounded-md px-3 py-2 transition hover:bg-slate-600 hover:text-white">
                             Profile
                         </a>
-                        <a href="{{ route('logout') }}"
-                           class="ml-2 rounded-md bg-indigo-500 px-3 py-2 text-white transition hover:bg-indigo-400">
-                            Log out
-                        </a>
+                        <form method="POST" action="{{ route('logout') }}" class="ml-2">
+                            @csrf
+
+                            <button type="submit"
+                                    class="rounded-md bg-indigo-500 px-3 py-2 text-white transition hover:bg-indigo-400">
+                                Log out
+                            </button>
+                        </form>
                     @else
                         <a href="{{ route('login') }}"
                            class="ml-2 rounded-md bg-indigo-500 px-3 py-2 text-white transition hover:bg-indigo-400">

@@ -8,12 +8,10 @@
                     <p class="mt-3 text-slate-600">Find a task that matches your skills.</p>
                 </div>
 
-                @auth
-                    <a href="{{ route('tasks.create') }}"
-                       class="rounded-lg bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-950/40 transition hover:bg-indigo-400">
-                        Post a task
-                    </a>
-                @endauth
+                <a href="{{ route('tasks.create') }}"
+                   class="rounded-lg bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-950/40 transition hover:bg-indigo-400">
+                    Post a task
+                </a>
             </div>
 
             <form action="{{ route('tasks.index') }}" method="get" class="mb-8 flex max-w-4xl flex-wrap gap-3">
@@ -44,20 +42,24 @@
             @else
                 <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($tasks as $task)
-                        <a href="{{ route('tasks.show', $task) }}"
-                           class="group block rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-100">
-                            <article class="flex h-full flex-col rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-xl shadow-black/10 transition group-hover:-translate-y-1 group-hover:border-indigo-500/60 group-hover:shadow-indigo-950/30">
+                        <article @class([
+                            'group flex h-full flex-col rounded-2xl border bg-slate-900 p-6 shadow-xl shadow-black/10 transition group-hover:-translate-y-1 group-hover:shadow-indigo-950/30',
+                            'border-2 border-red-500 group-hover:border-red-400' => $task->is_urgent,
+                            'border-slate-800 group-hover:border-indigo-500/60' => ! $task->is_urgent,
+                        ])>
+                            <a href="{{ route('tasks.show', $task) }}"
+                               class="block flex-1 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 <div class="flex items-start justify-between gap-4">
                                     <h2 class="text-xl font-semibold text-white">{{ $task->title }}</h2>
 
                                     @if ($task->is_urgent)
                                         <span class="rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700">
-                                            Urgent
-                                        </span>
+                                                Urgent
+                                            </span>
                                     @endif
                                 </div>
 
-                                <p class="mt-4 flex-1 text-sm leading-6 text-slate-400">
+                                <p class="mt-4 text-sm leading-6 text-slate-400">
                                     {{ \Illuminate\Support\Str::limit($task->description, 30, '...') }}
                                 </p>
 
@@ -65,12 +67,12 @@
                                     <span class="rounded-full bg-slate-800 px-3 py-1 text-slate-300">
                                         {{ $task->category?->name ?? 'Unknown category' }}
                                     </span>
-                                    <span class="{{ $task->status ? 'text-emerald-400' : 'text-slate-500' }}">
+                                    <span class="{{ $task->status ? 'text-yellow-400' : 'text-slate-500' }}">
                                         {{ $task->status ? 'Closed' : 'Open' }}
                                     </span>
                                 </div>
-                            </article>
-                        </a>
+                            </a>
+                        </article>
                     @endforeach
                 </div>
             @endif

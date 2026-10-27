@@ -36,6 +36,10 @@ Route::post('/tasks', [TaskController::class, 'store'])
     ->middleware('auth')
     ->name(name: 'tasks.store');
 
+Route::post('/tasks/{task}/close', [TaskController::class, 'close'])
+    ->middleware('auth')
+    ->name(name: 'tasks.close');
+
 Route::put('/tasks/{task}', [TaskController::class, 'update'])
     ->middleware('auth')
     ->name(name: 'tasks.update');
@@ -56,4 +60,5 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
 
+require __DIR__.'/auth.php';
 require __DIR__.'/settings.php';

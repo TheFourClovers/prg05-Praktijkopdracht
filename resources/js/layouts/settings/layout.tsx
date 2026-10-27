@@ -8,12 +8,18 @@ import { cn, toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
+import { index as tasksIndex } from '@/routes/tasks';
 import type { NavItem } from '@/types';
 
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
         href: edit(),
+        icon: null,
+    },
+    {
+        title: 'Posts',
+        href: '/settings/posts',
         icon: null,
     },
     {
@@ -37,6 +43,12 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                 title="Settings"
                 description="Manage your profile and account settings"
             />
+
+            <div className="mb-6">
+                <Button variant="outline" size="sm" asChild>
+                    <Link href={tasksIndex()}>Back to task feed</Link>
+                </Button>
+            </div>
 
             <div className="flex flex-col lg:flex-row lg:space-x-12">
                 <aside className="w-full max-w-xl lg:w-48">

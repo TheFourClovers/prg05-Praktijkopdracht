@@ -37,5 +37,11 @@ test('users can logout', function () {
     $response = $this->actingAs($user)->post('/logout');
 
     $this->assertGuest();
-    $response->assertRedirect('/');
+    $response->assertRedirect(route('tasks.index', absolute: false));
+});
+
+test('guests are redirected to login when they want to post a task', function () {
+    $response = $this->get(route('tasks.create'));
+
+    $response->assertRedirect(route('login'));
 });

@@ -23,5 +23,7 @@ class DashboardTest extends TestCase
 
         $response = $this->get(route('dashboard'));
         $response->assertOk();
+        $response->assertSee(route('tasks.index'));
+        $response->assertSee('Go to tasks');
     }
 }

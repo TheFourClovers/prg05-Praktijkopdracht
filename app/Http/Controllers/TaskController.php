@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Task;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -28,6 +29,8 @@ class TaskController extends Controller
             ->when($categoryId > 0, function ($query) use ($categoryId): void {
                 $query->where('category_id', $categoryId);
             })
+            ->orderBy('status')
+            ->orderByDesc('is_urgent')
             ->latest()
             ->get();
 
@@ -158,6 +161,20 @@ class TaskController extends Controller
     }
 
     /**
+     * Mark a task as closed.
+     */
+    public function close(Task $task): RedirectResponse
+    {
+        abort_unless(auth()->id() === $task->user_id, 403);
+        abort_if($task->status, 422, 'This task is already closed.');
+
+        $task->status = true;
+        $task->save();
+
+        return redirect()->route('tasks.show', $task);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Task $task)
@@ -171,8 +188,6 @@ class TaskController extends Controller
 
     private function canMarkUrgent(): bool
     {
-        return auth()->user()->tasks()
-            ->where('status', true)
-            ->count() >= 5;
+        return auth()->user()->tasks()->count() >= 5;
     }
 }
