@@ -112,7 +112,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        abort_unless(auth()->id() === $task->user_id, 403);
+        abort_unless($this->canManageTask($task), 403);
 
         $categories = Category::query()
             ->orderBy('name')
@@ -130,7 +130,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        abort_unless(auth()->id() === $task->user_id, 403);
+        abort_unless($this->canManageTask($task), 403);
 
         $validated = $request->validate([
             'title' => 'required|min:3|max:100',
@@ -140,7 +140,7 @@ class TaskController extends Controller
             'is_urgent' => 'sometimes|boolean',
         ]);
 
-        $isUrgent = $this->canMarkUrgent()
+        $isUrgent = auth()->user()->isAdmin() || $this->canMarkUrgent()
             ? $request->boolean('is_urgent')
             : $task->is_urgent;
 
@@ -165,7 +165,7 @@ class TaskController extends Controller
      */
     public function close(Task $task): RedirectResponse
     {
-        abort_unless(auth()->id() === $task->user_id, 403);
+        abort_unless($this->canManageTask($task), 403);
         abort_if($task->status, 422, 'This task is already closed.');
 
         $task->status = true;
@@ -179,7 +179,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        abort_unless(auth()->id() === $task->user_id, 403);
+        abort_unless($this->canManageTask($task), 403);
 
         $task->delete();
 
@@ -188,6 +188,11 @@ class TaskController extends Controller
 
     private function canMarkUrgent(): bool
     {
-        return auth()->user()->tasks()->count() >= 5;
+        return auth()->user()->isAdmin() || auth()->user()->tasks()->count() >= 5;
+    }
+
+    private function canManageTask(Task $task): bool
+    {
+        return auth()->id() === $task->user_id || auth()->user()->isAdmin();
     }
 }

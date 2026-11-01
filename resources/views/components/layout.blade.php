@@ -20,6 +20,18 @@
                 </a>
 
                 <div class="flex items-center gap-1 text-sm font-medium text-slate-100">
+                    @auth
+                        <div class="mr-3 border-r border-slate-500 pr-4 text-right" aria-label="Signed-in account">
+                            <div class="font-semibold text-white">{{ Auth::user()->name ?: Auth::user()->email }}</div>
+                            <div class="text-xs font-normal text-slate-300">{{ Auth::user()->email }}</div>
+                        </div>
+                        @if (auth()->user()->isAdmin())
+                            <a href="{{ route('admin.dashboard') }}"
+                               class="rounded-md px-3 py-2 transition hover:bg-slate-600 hover:text-white">
+                                Admin
+                            </a>
+                        @endif
+                    @endauth
                     <a href="{{ route('tasks.index') }}"
                        class="rounded-md px-3 py-2 transition hover:bg-slate-600 hover:text-white">
                         Home

@@ -62,16 +62,29 @@
                                 <p class="mt-4 text-sm leading-6 text-slate-400">
                                     {{ \Illuminate\Support\Str::limit($task->description, 30, '...') }}
                                 </p>
+                            </a>
 
-                                <div class="mt-6 flex items-center justify-between border-t border-slate-800 pt-4 text-sm">
+                            <div class="mt-6 flex items-center justify-between border-t border-slate-800 pt-4 text-sm">
                                     <span class="rounded-full bg-slate-800 px-3 py-1 text-slate-300">
                                         {{ $task->category?->name ?? 'Unknown category' }}
                                     </span>
-                                    <span class="{{ $task->status ? 'text-yellow-400' : 'text-slate-500' }}">
-                                        {{ $task->status ? 'Closed' : 'Open' }}
-                                    </span>
-                                </div>
-                            </a>
+                                    <div class="flex items-center gap-3">
+                                        <span class="{{ $task->status ? 'text-yellow-400' : 'text-slate-500' }}">
+                                            {{ $task->status ? 'Closed' : 'Open' }}
+                                        </span>
+                                        @auth
+                                            @if (! $task->status && (auth()->id() === $task->user_id || auth()->user()->isAdmin()))
+                                                <form action="{{ route('tasks.close', $task) }}" method="post">
+                                                    @csrf
+                                                    <button type="submit"
+                                                            class="rounded-md bg-yellow-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-yellow-500">
+                                                        Close
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @endauth
+                                    </div>
+                            </div>
                         </article>
                     @endforeach
                 </div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,12 @@ Route::put('/tasks/{task}', [TaskController::class, 'update'])
 Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])
     ->middleware('auth')
     ->name(name: 'tasks.destroy');
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function (): void {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::patch('/users/{user}/role', [AdminController::class, 'updateRole'])
+        ->name('admin.users.role');
+});
 
 Route::view('/', 'welcome')->name('home');
 Route::view('/about-us', 'about-us');

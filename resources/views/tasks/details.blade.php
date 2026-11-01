@@ -44,7 +44,7 @@
                 </div>
 
                 @auth
-                    @if (auth()->id() === $task->user_id)
+                    @if (auth()->id() === $task->user_id || auth()->user()->isAdmin())
                         <div class="mt-6 flex gap-3 border-t border-slate-800 pt-6">
                             @if (! $task->status)
                                 <form action="{{ route('tasks.close', $task) }}" method="post">
